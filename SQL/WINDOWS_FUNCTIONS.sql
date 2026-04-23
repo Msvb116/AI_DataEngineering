@@ -1,0 +1,375 @@
+
+USE JOINS_DB;
+
+create table CUSTOMER_TB(
+CUST_ID INT,
+CUST_NAME  VARCHAR(20)
+);
+
+create table PRODUCT_TB(
+PRODUCT_ID INT,
+PRODUCT_NAME VARCHAR(30)
+);
+
+create table SALES_TB(
+CUST_ID INT,
+PRODUCT_ID INT,
+ORDER_DATE DATE,
+SALES_AMOUNT INT
+);
+
+-- Insert into CUSTOMER_TB
+INSERT INTO CUSTOMER_TB (CUST_ID, CUST_NAME) VALUES (1, 'Arun');
+INSERT INTO CUSTOMER_TB (CUST_ID, CUST_NAME) VALUES (2, 'Priya');
+INSERT INTO CUSTOMER_TB (CUST_ID, CUST_NAME) VALUES (3, 'Karthik');
+INSERT INTO CUSTOMER_TB (CUST_ID, CUST_NAME) VALUES (4, 'Sneha');
+
+-- Insert into PRODUCT_TB
+INSERT INTO PRODUCT_TB (PRODUCT_ID, PRODUCT_NAME) VALUES (101, 'Laptop');
+INSERT INTO PRODUCT_TB (PRODUCT_ID, PRODUCT_NAME) VALUES (102, 'Mobile');
+INSERT INTO PRODUCT_TB (PRODUCT_ID, PRODUCT_NAME) VALUES (103, 'Tablet');
+INSERT INTO PRODUCT_TB (PRODUCT_ID, PRODUCT_NAME) VALUES (104, 'Headphones');
+
+-- Insert into SALES_TB
+INSERT INTO SALES_TB (CUST_ID, PRODUCT_ID, ORDER_DATE, SALES_AMOUNT) 
+VALUES (1, 101, '2025-01-10', 60000);
+
+INSERT INTO SALES_TB (CUST_ID, PRODUCT_ID, ORDER_DATE, SALES_AMOUNT) 
+VALUES (2, 102, '2025-01-12', 25000);
+
+INSERT INTO SALES_TB (CUST_ID, PRODUCT_ID, ORDER_DATE, SALES_AMOUNT) 
+VALUES (3, 103, '2025-01-15', 30000);
+
+INSERT INTO SALES_TB (CUST_ID, PRODUCT_ID, ORDER_DATE, SALES_AMOUNT) 
+VALUES (1, 104, '2025-01-18', 5000);
+
+INSERT INTO SALES_TB (CUST_ID, PRODUCT_ID, ORDER_DATE, SALES_AMOUNT) 
+VALUES (4, 101, '2025-01-20', 65000);
+
+INSERT INTO SALES_TB (CUST_ID, PRODUCT_ID, ORDER_DATE, SALES_AMOUNT) 
+VALUES (2, 103, '2025-01-22', 28000);
+
+SELECT * FROM SALES_TB;
+SELECT * FROM PRODUCT_TB;
+SELECT * FROM CUSTOMER_TB;
+
+SELECT A.CUST_NAME, C.PRODUCT_NAME ,B.ORDER_DATE , B.SALES_AMOUNT   FROM CUSTOMER_TB A LEFT JOIN SALES_TB B 
+ON A.CUST_ID = B.CUST_ID LEFT JOIN PRODUCT_TB C ON B.PRODUCT_ID= C. PRODUCT_ID;
+
+
+SELECT * FROM CAR_DATA_TB;
+SELECT * FROM (CAR_DATA_TB);
+SELECT * FROM CAR_DATA_TB A;
+SELECT * FROM ( SELECT * FROM CAR_DATA_TB) A ;
+
+SELECT YEAR ,COUNT(*) TOTAL_CARS FROM CAR_DATA_TB GROUP BY YEAR HAVING COUNT(*) > 30;   
+
+# WITH OUT USING HAVING CLAUSE 
+SELECT * FROM (
+SELECT YEAR ,COUNT(*) AS TOTAL_CARS FROM CAR_DATA_TB GROUP BY YEAR
+) X  HAVING TOTAL_CARS > 30;
+
+DROP TABLE IF EXISTS STUDENT_MARKS_TB;
+
+CREATE TABLE STUDENT_MARKS_TB (
+    ID INT,
+    NAME VARCHAR(20),
+    MARKS INT
+);
+
+INSERT INTO STUDENT_MARKS_TB VALUES (1, 'SANTHOSH', 75);
+INSERT INTO STUDENT_MARKS_TB VALUES (2, 'KIRAN', 90);
+INSERT INTO STUDENT_MARKS_TB VALUES (3, 'ARJUN', 77);
+INSERT INTO STUDENT_MARKS_TB VALUES (4, 'KARTHIK', 97);
+INSERT INTO STUDENT_MARKS_TB VALUES (5, 'RAJEV', 65);
+INSERT INTO STUDENT_MARKS_TB VALUES (6, 'GOPAL', 65);
+INSERT INTO STUDENT_MARKS_TB VALUES (7, 'TARUN', 35);
+INSERT INTO STUDENT_MARKS_TB VALUES (8, 'DIYA', 99);
+
+SELECT * FROM STUDENT_MARKS_TB;
+# HIGHEST MARKS 
+SELECT * FROM STUDENT_MARKS_TB ORDER BY MARKS DESC LIMIT 1;
+
+#LEAST MARKS
+SELECT * FROM STUDENT_MARKS_TB ORDER BY MARKS ASC LIMIT 1;
+
+# 3 RD RANK 
+SELECT * FROM (
+SELECT * FROM STUDENT_MARKS_TB ORDER BY MARKS DESC LIMIT 3 ) X 
+ORDER BY MARKS ASC LIMIT 1;
+
+# 5TH HIGHEST  
+SELECT * FROM (
+SELECT * FROM STUDENT_MARKS_TB ORDER BY MARKS DESC LIMIT 5 ) X 
+ORDER BY MARKS ASC LIMIT 1;
+
+# ALLA ARE WORK AROUND NOT ACCEPTED IN INTERVIEWS
+
+
+SELECT * FROM STUDENT_MARKS_TB;
+
+-- Create table
+CREATE TABLE sales_cal (
+    PRODUCT_ID INT,
+    PRODUCT_NAME VARCHAR(20),
+    MRP INT,
+    QUANTITY INT
+);
+
+-- Insert data
+INSERT INTO sales_cal VALUES (1, 'VIVO', 9000, 3);
+INSERT INTO sales_cal VALUES (2, 'IPHONE', 27000, 5);
+INSERT INTO sales_cal VALUES (3, 'SAMSUNG', 16000, 4);
+INSERT INTO sales_cal VALUES (4, 'MI', 7500, 6);
+
+CREATE TABLE student_marks_tb_1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    medium VARCHAR(20),
+    marks INT
+);
+
+INSERT INTO student_marks_tb_1 (id, name, medium, marks) VALUES
+(1, 'SANTHOSH', 'ENGLISH', 75),
+(2, 'KIRAN', 'KANNADA', 90),
+(3, 'ARJUN', 'KANNADA', 77),
+(4, 'KARTHIK', 'ENGLISH', 97),
+(5, 'RAJEV', 'ENGLISH', 65),
+(6, 'GOPAL', 'KANNADA', 65),
+(7, 'TARUN', 'ENGLISH', 35),
+(8, 'DIYA', 'KANNADA', 99);
+
+
+
+SELECT * FROM sales_cal;
+#SALES = MRP * QUANTITY
+
+SELECT PRODUCT_ID ,PRODUCT_NAME, MRP , QUANTITY , MRP*QUANTITY SALES FROM sales_cal;
+SELECT *, MRP*QUANTITY SALES FROM sales_cal;
+
+# WINDOWS fUNCTIONS / ANALYTHICAL FUNCTIONS / ADVANCED FUNCTIONS
+
+SELECT * FROM STUDENT_MARKS_TB;
+
+SELECT ID,NAME,MARKS, RANK()OVER(ORDER BY MARKS DESC)AS RNK FROM STUDENT_MARKS_TB;
+
+# SECOND RANK
+SELECT * FROM ( 
+SELECT ID, NAME, MARKS, RANK()OVER(ORDER BY MARKS DESC)AS RNK FROM STUDENT_MARKS_TB) X 
+ WHERE RNK = 2;
+
+SELECT * FROM ( 
+SELECT ID, NAME, MARKS, 
+	RANK()OVER(ORDER BY MARKS DESC)AS RNK , 
+	DENSE_RANK()OVER(ORDER BY MARKS DESC)AS DENSE_RNK , 
+    ROW_NUMBER()OVER(ORDER BY MARKS DESC)AS ROW_NUMBERS 
+    FROM STUDENT_MARKS_TB) X 
+ WHERE RNK = 6;
+
+# RANK -- RANKS WILL BE SKIPPED (in case of same values)
+# dense_RANK -- RANKS WILL not BE SKIPPED (in case of same values)
+# Row_number -- will get unique value for all the values / ranks
+
+SELECT ID, NAME, MARKS, RANK()OVER(ORDER BY MARKS DESC)AS RNK FROM STUDENT_MARKS_TB;  		# rank()
+SELECT ID, NAME, MARKS, DENSE_RANK()OVER(ORDER BY MARKS DESC)AS RNK FROM STUDENT_MARKS_TB;  # Dense_rank()
+SELECT ID, NAME, MARKS, ROW_NUMBER()OVER(ORDER BY MARKS DESC)AS RNK FROM STUDENT_MARKS_TB;  # ROW_NUMBER()
+
+SELECT * FROM STUDENT_MARKS_TB_1;
+SELECT ID, NAME, MARKS, RANK()OVER(ORDER BY MARKS DESC)AS RNK FROM STUDENT_MARKS_TB_1 where medium = 'english'
+union
+SELECT ID, NAME, MARKS, RANK()OVER(ORDER BY MARKS DESC)AS RNK FROM STUDENT_MARKS_TB_1 where medium = 'kannada';
+
+SELECT ID, NAME, MARKS, RANK()OVER( partition by medium  order by  MARKS DESC)AS RNK FROM STUDENT_MARKS_TB_1;
+
+# 3rd highest salary in employee table
+DROP TABLE IF EXISTS EMP_SAL_FIND;
+
+CREATE TABLE EMP_SAL_FIND_1 (
+    EID INT,
+    ENAME VARCHAR(20),
+    dept varchar(10),
+    ESAL INT
+);
+
+INSERT INTO EMP_SAL_FIND VALUES (1, 'ANEESH', 15200);
+INSERT INTO EMP_SAL_FIND VALUES (2, 'ANAND', 17500);
+INSERT INTO EMP_SAL_FIND VALUES (3, 'RAJA', 10000);
+INSERT INTO EMP_SAL_FIND VALUES (4, 'RAVI', 9500);
+INSERT INTO EMP_SAL_FIND VALUES (5, 'UMESH', 18000);
+INSERT INTO EMP_SAL_FIND VALUES (6, 'ISHANT', 14500);
+INSERT INTO EMP_SAL_FIND VALUES (7, 'VARUN', 9500);
+INSERT INTO EMP_SAL_FIND VALUES (8, 'HARISH', 8500);
+
+INSERT INTO EMP_SAL_FIND_1 VALUES (1, 'ANEESH',"admin", 15200);
+INSERT INTO EMP_SAL_FIND_1 VALUES (2, 'ANAND',"sales", 17500);
+INSERT INTO EMP_SAL_FIND_1 VALUES (3, 'RAJA',"admin", 10000);
+INSERT INTO EMP_SAL_FIND_1 VALUES (4, 'RAVI',"sales", 9500);
+INSERT INTO EMP_SAL_FIND_1 VALUES (5, 'UMESH',"sales", 18000);
+INSERT INTO EMP_SAL_FIND_1 VALUES (6, 'ISHANT',"admin", 14500);
+INSERT INTO EMP_SAL_FIND_1 VALUES (7, 'VARUN',"sales", 9500);
+INSERT INTO EMP_SAL_FIND_1 VALUES (8, 'HARISH',"admin", 8500);
+
+select * from EMP_SAL_FIND;
+
+# 4 th highest 
+select * from (
+select ENAME,esal, rank()over(order by esal desc) rnk from EMP_SAL_FIND ) x
+where rnk =4;
+
+select * from EMP_SAL_FIND_1;
+
+select * from (
+select ENAME,dept,esal, dense_rank()over(partition by dept order by esal desc) rnk from EMP_SAL_FIND_1 ) x
+where rnk =3;
+
+
+select * from emp1_tb;
+select * from training_tb;
+
+# need the 5 emp who spend more on training case
+
+select * from (
+select * , dense_rank() over(order by total_cost desc) rnk from (
+		select a.title , sum(b.cost) total_cost
+		from emp1_tb a join training_tb b 
+		on a.employeeid = b.employee_id
+		group by a.title) x 
+        ) y
+where rnk <= 5;
+
+# lead & lag Functions
+
+# YOY (Year over Year)
+
+# Formula ((current year sales - previous year sales) / previous Year Sales ) * 100
+
+create table windows_functions_exp(
+s_year int,
+t_sales int);
+
+INSERT INTO windows_functions_exp VALUES (2015 , 23000);
+INSERT INTO windows_functions_exp VALUES (2016 , 29000);
+INSERT INTO windows_functions_exp VALUES (2017 , 34000);
+INSERT INTO windows_functions_exp VALUES (2018 , 32000);
+INSERT INTO windows_functions_exp VALUES (2019 , 35000);
+
+CREATE TABLE windows_funs_exp1 (
+    S_YEAR INT,
+    S_PRODUCT VARCHAR(20),
+    T_SALES INT
+);
+
+INSERT INTO windows_funs_exp1 (S_YEAR, S_PRODUCT, T_SALES) VALUES
+(2015, 'IPHONE', 23000),
+(2016, 'IPHONE', 25000),
+(2017, 'IPHONE', 34000),
+(2018, 'IPHONE', 32000),
+(2019, 'IPHONE', 33000),
+(2015, 'SAMSUNG', 21000),
+(2016, 'SAMSUNG', 20000),
+(2017, 'SAMSUNG', 31500),
+(2018, 'SAMSUNG', 29750),
+(2019, 'SAMSUNG', 24500);
+
+CREATE TABLE windows_funs_exp_monthly (
+    S_YEAR INT,
+    S_MONTH INT,
+    T_SALES INT
+);
+INSERT INTO windows_funs_exp_monthly (S_YEAR, S_MONTH, T_SALES) VALUES
+(2016, 1, 2154),
+(2016, 2, 3892),
+(2016, 3, 1023),
+(2016, 4, 2876),
+(2016, 5, 945),
+(2016, 6, 4210),
+(2016, 7, 1789),
+(2016, 8, 654),
+(2016, 9, 1345),
+(2016, 10, 2987),
+(2016, 11, 1678),
+(2016, 12, 3560),
+
+-- 2017
+(2017, 1, 4123),
+(2017, 2, 2765),
+(2017, 3, 1890),
+(2017, 4, 3210),
+(2017, 5, 745),
+(2017, 6, 4598),
+(2017, 7, 2103),
+(2017, 8, 980),
+(2017, 9, 1543),
+(2017, 10, 2678),
+(2017, 11, 1999),
+(2017, 12, 3888),
+
+-- 2018
+(2018, 1, 3012),
+(2018, 2, 3421),
+(2018, 3, 1756),
+(2018, 4, 2890),
+(2018, 5, 1102),
+(2018, 6, 4701),
+(2018, 7, 2234),
+(2018, 8, 1200),
+(2018, 9, 1654),
+(2018, 10, 3109),
+(2018, 11, 2456),
+(2018, 12, 3999),
+(2019, 1, 2789),
+(2019, 2, 3500),
+(2019, 3, 1602),
+(2019, 4, 2955),
+(2019, 5, 980),
+(2019, 6, 4822),
+(2019, 7, 2401),
+(2019, 8, 1325),
+(2019, 9, 1780),
+(2019, 10, 3256),
+(2019, 11, 2600),
+(2019, 12, 4105),
+(2020, 1, 3201),
+(2020, 2, 2987),
+(2020, 3, 1450),
+(2020, 4, 2100),
+(2020, 5, 875),
+(2020, 6, 3902),
+(2020, 7, 1850),
+(2020, 8, 1420),
+(2020, 9, 1675),
+(2020, 10, 3050),
+(2020, 11, 2800),
+(2020, 12, 4200);
+
+
+select * from windows_functions_exp;
+
+select s_year , t_sales , ((t_sales - py_sales)/py_sales) * 100 yoy from (
+select s_year, t_sales , lag(t_sales, 1 ) over(order by t_sales) as py_sales from windows_functions_exp ) a ;
+
+select s_year , t_sales , ((t_sales - py_sales)/py_sales) * 100 yoy from (
+select s_year, t_sales , lead(t_sales, 1 ) over(order by t_sales desc) as py_sales from windows_functions_exp ) a ;
+
+select * from windows_funs_exp1;
+select * , lag(t_sales, 1 ) over(partition by s_product order  by s_year) as py_sales from windows_funs_exp1;
+
+# windows Functions 
+#rank()
+#dense_rank()
+#lead()
+#lag()
+#Row_number()
+#sum() over()
+
+# All aggeregate functions also called windows functions if it has over()
+
+# cumulative sales 
+select * from windows_funs_exp_monthly;
+select * , 
+sum(t_sales) over(partition by s_year order  by s_year,s_month) cum_sales  
+from windows_funs_exp_monthly;
+
+
+
+
